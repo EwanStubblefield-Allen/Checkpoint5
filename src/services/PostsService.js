@@ -5,7 +5,6 @@ import { api } from "./AxiosService.js"
 
 class PostsService {
   settingData(data) {
-    logger.log(data)
     AppState.posts = data.posts.map(p => new Post(p))
     AppState.page = data.page
     AppState.totalPages = data.totalPages

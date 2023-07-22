@@ -1,5 +1,8 @@
-export class Account {
+import { Profile } from "./Profile.js"
+
+export class Account extends Profile {
   constructor(data) {
+    super(data)
     this.id = data.id
     this.email = data.email
     this.name = data.name

@@ -23,7 +23,7 @@ export default {
       profiles: computed(() => AppState.profiles)
     };
   },
-  components: { PostCard, ProfileCard }
+  components: { PostCard }
 }
 </script>
 

@@ -59,7 +59,7 @@ export default {
       editable,
 
       search() {
-        router.push('Search')
+        router.push({ name: 'Search' })
         getProfilesBySearch()
         getPostsBySearch()
         editable.value.search = ''

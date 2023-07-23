@@ -19,11 +19,11 @@
       </div>
       <div class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="authDropdown">
         <div class="list-group">
-          <div class="list-group-item dropdown-item list-group-item-action">
-            <i class="mdi mdi-pencil"></i>
+          <div @click="fillForm()" class="list-group-item dropdown-item list-group-item-action">
+            <i class="mdi mdi-pencil blue"></i>
             Edit
           </div>
-          <div class="list-group-item dropdown-item list-group-item-action text-danger selectable">
+          <div @click="removePost()" class="list-group-item dropdown-item list-group-item-action text-danger selectable">
             <i class="mdi mdi-trash-can"></i>
             Delete
           </div>
@@ -36,15 +36,20 @@
   <img v-if="postProp.imgUrl" class="large-img mb-2" :src="postProp.imgUrl" :alt="postProp.creator.name">
 
   <div class="d-flex justify-content-end p-3 fs-4">
-    <i v-if="liked" class="mdi mdi-heart heart"></i>
-    <i v-else class="mdi mdi-heart-outline heart"></i>
-    <p class="ps-2">{{ postProp.likes.length }}</p>
+    <div @click="toggleLikesByPostId()" class="d-flex selectable">
+      <i v-if="liked" class="mdi mdi-heart heart"></i>
+      <i v-else class="mdi mdi-heart-outline heart"></i>
+      <p class="ps-2">{{ postProp.likes.length }}</p>
+    </div>
   </div>
 </template>
 
 <script>
 import { AppState } from '../AppState.js'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
+import { postsService } from '../services/PostsService.js'
+import { Collapse } from 'bootstrap'
+import Pop from '../utils/Pop.js'
 
 export default {
   props: {
@@ -54,11 +59,40 @@ export default {
     }
   },
   setup(props) {
-    onMounted(() => { })
-
     return {
       account: computed(() => AppState.account),
-      liked: computed(() => props.postProp.likes.find(p => p.id == AppState.account.id))
+      liked: computed(() => props.postProp.isLiked),
+
+      fillForm() {
+        AppState.activePost = props.postProp
+        document.documentElement.scrollTop = 0;
+        if (props.postProp.imgUrl) {
+          Collapse.getOrCreateInstance('#postCollapse').show()
+        }
+      },
+
+      async removePost() {
+        try {
+          const isSure = await Pop.confirm('Are you sure you want to delete this post?')
+          if (!isSure) {
+            return
+          }
+          await postsService.removePost(props.postProp.id)
+        } catch (error) {
+          Pop.error(error.message, '[REMOVE POST]')
+        }
+      },
+
+      async toggleLikesByPostId() {
+        try {
+          if (!this.account.id) {
+            return
+          }
+          await postsService.toggleLikesByPostId(props.postProp.id)
+        } catch (error) {
+          Pop.error(error.message, '[TOGGLE LIKES BY POST ID]')
+        }
+      }
     }
   }
 }

@@ -1,7 +1,8 @@
 <template>
   <div class="container-fluid">
     <section class="row">
-      <div class="d-none d-md-block col-2">
+      <div class="d-none d-md-block col-2 ps-0">
+        <MyProfileCard />
       </div>
       <div class="col-12 col-md-10">
         <header class="row">
@@ -22,6 +23,7 @@
 import { computed } from 'vue'
 import { AppState } from './AppState'
 import Navbar from './components/Navbar.vue'
+import MyProfileCard from './components/MyProfileCard.vue'
 import AdCard from './components/AdCard.vue'
 
 export default {
@@ -30,7 +32,7 @@ export default {
       appState: computed(() => AppState)
     }
   },
-  components: { Navbar, AdCard }
+  components: { Navbar, AdCard, MyProfileCard }
 }
 </script>
 <style lang="scss">
@@ -59,6 +61,10 @@ footer {
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
+.blue {
+  color: #39C4C6;
+}
+
 .gray {
   color: #424242;
 }
@@ -73,16 +79,5 @@ footer {
   height: 80px;
   width: 80px;
   border-radius: 50%;
-}
-
-.icon-position {
-  height: 37px;
-  width: 37px;
-  background-color: white;
-  border: 1px solid #7EDACF;
-  border-radius: 50%;
-  position: absolute;
-  right: 0;
-  bottom: 0;
 }
 </style>

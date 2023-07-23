@@ -7,7 +7,7 @@
         <i v-if="profile.graduated" class="d-flex justify-content-center align-items-center mdi mdi-account-school fs-2 gray icon-position"></i>
       </div>
     </div>
-    <div class="d-flex justify-content-end px-3">
+    <div :class="{ 'my-4': !profile.github & !profile.linkedin & !profile.resume }" class="d-flex justify-content-end px-3">
       <div class="d-flex fs-1">
         <a v-if="profile.github" class="mdi mdi-github px-2 text-dark" :href="profile.github"></a>
         <a v-if="profile.linkedin" class="mdi mdi-linkedin px-2 text-dark" :href="profile.linkedin"></a>
@@ -19,9 +19,9 @@
       <p class="fs-1 fw-bold">{{ profile.name }}</p>
       <p class="gray">{{ profile.bio }}</p>
     </div>
-    <div v-if="account.id == profile.id" class="text-end py-3 px-4">
-      <button class="px-3 fs-5">Edit</button>
-    </div>
+    <router-link :to="{ name: 'Account' }" v-if="account.id == profile.id" class="d-flex justify-content-end py-3 px-4">
+      <button class="btn edit-btn py-0 px-3 fs-5">Edit</button>
+    </router-link>
   </div>
 </template>
 
@@ -52,5 +52,22 @@ export default {
 .pic-position {
   position: absolute;
   bottom: -65px;
+}
+
+.icon-position {
+  height: 37px;
+  width: 37px;
+  background-color: white;
+  border: 1px solid #7EDACF;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.edit-btn {
+  color: #7EDACF;
+  border-radius: 5px;
+  border: 1px solid #7EDACF;
 }
 </style>

@@ -1,4 +1,7 @@
 <template>
+  <div v-if="account.id">
+    <PostForm />
+  </div>
   <div v-for="p in posts" :key="p.id" class="my-3 elevation-4">
     <PostCard :postProp="p" />
   </div>
@@ -6,29 +9,42 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, watchEffect } from 'vue';
+import { postsService } from '../services/PostsService.js';
+import { AppState } from '../AppState.js';
+import { useRoute, useRouter } from 'vue-router';
+import PostForm from '../components/PostForm.vue';
 import PostCard from '../components/PostCard.vue';
 import PageNav from '../components/PageNav.vue';
 import Pop from '../utils/Pop.js';
-import { postsService } from '../services/PostsService.js';
-import { AppState } from '../AppState.js';
-import { useRoute } from 'vue-router';
 
 export default {
   setup() {
     const route = useRoute()
+    const router = useRouter()
 
     onMounted(() => {
-      getPosts();
+      let page = route.query.page
+      if (!page || page < 1) {
+        router.push({ name: 'Home', query: { page: 1 } })
+        page = 1
+      }
+      getPosts(page);
     })
 
     onUnmounted(() => {
       postsService.resetVariables()
     })
 
-    async function getPosts() {
+    watchEffect(() => {
+      if (AppState.account.id) {
+        getPosts(route.query.page)
+      }
+    })
+
+    async function getPosts(page) {
       try {
-        await postsService.getPosts(route.query.page);
+        await postsService.getPosts(page, 0);
       }
       catch (error) {
         Pop.error(error.message, "[GETTING POSTS]");
@@ -37,9 +53,10 @@ export default {
 
     return {
       posts: computed(() => AppState.posts),
+      account: computed(() => AppState.account)
     };
   },
-  components: { PostCard, PageNav }
+  components: { PostCard, PageNav, PostForm }
 }
 </script>
 

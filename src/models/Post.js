@@ -1,3 +1,5 @@
+import { AppState } from "../AppState.js"
+
 export class Post {
   constructor(data) {
     this.id = data.id
@@ -6,6 +8,7 @@ export class Post {
     this.creatorId = data.creatorId
     this.creator = data.creator
     this.likes = data.likes
+    this.isLiked = this.computedLike
     this.createdAt = this.computedDate(new Date().valueOf() - new Date(data.createdAt).valueOf())
   }
 
@@ -25,5 +28,13 @@ export class Post {
     }
     template += `${minutes}m`
     return template
+  }
+
+  get computedLike() {
+    const foundLike = this.likes.find(l => l.id == AppState.account.id)
+    if (foundLike) {
+      return true
+    }
+    return false
   }
 }

@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center">
     <router-link :to="{ name: 'Profile', params: { profileId: profileProp.id } }" class="position-relative p-3">
       <img class="account-pic position-relative" :src="profileProp.picture" :alt="profileProp.name">
-      <i v-if="profileProp.graduated" class="d-flex justify-content-center align-items-center mdi mdi-account-school fs-2 gray icon-position"></i>
+      <i v-if="profileProp.graduated" class="d-flex justify-content-center align-items-center mdi mdi-account-school fs-4 gray icon-position"></i>
     </router-link>
     <div class="px-3">
       <p>{{ profileProp.class }}</p>
@@ -33,5 +33,16 @@ export default {
   width: 80px;
   border: 3px solid #7EDACF;
   border-radius: 50%;
+}
+
+.icon-position {
+  height: 30px;
+  width: 30px;
+  background-color: white;
+  border: 1px solid #7EDACF;
+  border-radius: 50%;
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
 }
 </style>
